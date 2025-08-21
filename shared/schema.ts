@@ -1,10 +1,10 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, decimal, timestamp, boolean } from "drizzle-orm/pg-core";
+import { mysqlTable, text, varchar, int, decimal, timestamp, mysqlEnum } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const rooms = pgTable("rooms", {
-  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+export const rooms = mysqlTable("rooms", {
+  id: int("id").primaryKey().autoincrement(),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description").notNull(),
   category: varchar("category", { length: 100 }).notNull(),
@@ -12,20 +12,20 @@ export const rooms = pgTable("rooms", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const shorts = pgTable("shorts", {
-  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+export const shorts = mysqlTable("shorts", {
+  id: int("id").primaryKey().autoincrement(),
   title: varchar("title", { length: 255 }).notNull(),
   director: varchar("director", { length: 255 }).notNull(),
   description: text("description"),
   duration: varchar("duration", { length: 50 }).notNull(),
-  roomId: integer("room_id").references(() => rooms.id).notNull(),
+  roomId: int("room_id").references(() => rooms.id).notNull(),
   imageUrl: text("image_url"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const ratings = pgTable("ratings", {
-  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-  shortId: integer("short_id").references(() => shorts.id).notNull(),
+export const ratings = mysqlTable("ratings", {
+  id: int("id").primaryKey().autoincrement(),
+  shortId: int("short_id").references(() => shorts.id).notNull(),
   rating: decimal("rating", { precision: 3, scale: 1 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
