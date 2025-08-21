@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { exportToExcel } from "@/lib/api";
 import { useState } from "react";
+import { Link, useLocation } from "wouter";
 
 interface HeaderProps {
-  currentView: "home" | "room";
+  currentView: "home" | "room" | "progress";
   currentRoom?: { name: string };
 }
 
 export function Header({ currentView, currentRoom }: HeaderProps) {
   const { toast } = useToast();
   const [isExporting, setIsExporting] = useState(false);
+  const [location] = useLocation();
 
   const handleExport = async () => {
     setIsExporting(true);
@@ -43,13 +45,32 @@ export function Header({ currentView, currentRoom }: HeaderProps) {
             </h1>
           </div>
 
-          {/* Breadcrumb Navigation */}
-          <nav className="hidden md:flex items-center space-x-2 text-sm">
-            <span className="text-cinema-muted">Evaluación</span>
-            <ChevronRight className="h-4 w-4 text-cinema-muted" />
-            <span className="text-cinema-gold">
-              {currentView === "home" ? "Salas" : currentRoom?.name || "Sala"}
-            </span>
+          {/* Navigation Menu */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link href="/">
+              <Button
+                variant="ghost"
+                className={`text-sm font-medium ${
+                  location === "/" 
+                    ? "text-cinema-gold border-b-2 border-cinema-gold" 
+                    : "text-cinema-muted hover:text-cinema-gold"
+                }`}
+              >
+                Salas
+              </Button>
+            </Link>
+            <Link href="/progress">
+              <Button
+                variant="ghost"
+                className={`text-sm font-medium ${
+                  location === "/progress" 
+                    ? "text-cinema-gold border-b-2 border-cinema-gold" 
+                    : "text-cinema-muted hover:text-cinema-gold"
+                }`}
+              >
+                Progreso General
+              </Button>
+            </Link>
           </nav>
 
           <div className="flex items-center space-x-4">

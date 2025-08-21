@@ -2,7 +2,17 @@
 
 ## Overview
 
-CineEval Pro is a full-stack web application designed for evaluating and rating short films across different cinema categories. The application provides a sophisticated interface for film critics and evaluators to systematically rate short films organized into themed rooms (Drama, Documentary, Animation, Fantasy). The system includes comprehensive rating management, statistical analysis, and data export capabilities for film festival or competition scenarios.
+CineEval Pro is a full-stack web application designed for evaluating and rating short films across different cinema categories. The application provides a sophisticated interface for film critics and evaluators to systematically rate short films organized into themed rooms (Drama, Documentary, Animation, Fantasy). The system includes comprehensive rating management, statistical analysis, progress tracking, and data export capabilities for film festival or competition scenarios.
+
+## Recent Changes
+
+**August 21, 2025**: Added "Progreso General" section with comprehensive progress tracking:
+- New dedicated Progress page accessible via navigation menu
+- Real-time statistics dashboard with total shorts, rated/pending counts, and average ratings  
+- Room-by-room progress visualization with completion percentages
+- Performance insights and evaluation status indicators
+- Responsive card-based layout with cinema-themed styling
+- Dynamic updates when ratings are added or modified
 
 ## User Preferences
 

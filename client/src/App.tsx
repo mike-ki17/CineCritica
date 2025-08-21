@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/header";
 import Home from "@/pages/home";
 import Room from "@/pages/room";
+import ProgressPage from "@/pages/progress";
 import NotFound from "@/pages/not-found";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -23,7 +24,7 @@ function AppContent() {
     enabled: !!roomId,
   });
 
-  const currentView = location === "/" ? "home" : "room";
+  const currentView = location === "/" ? "home" : location === "/progress" ? "progress" : "room";
 
   return (
     <div className="min-h-screen bg-cinema-dark text-cinema-light">
@@ -35,6 +36,7 @@ function AppContent() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Switch>
           <Route path="/" component={Home} />
+          <Route path="/progress" component={ProgressPage} />
           <Route path="/room/:roomId" component={Room} />
           <Route component={NotFound} />
         </Switch>
