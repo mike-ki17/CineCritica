@@ -13,7 +13,7 @@ export const rooms = mysqlTable("rooms", {
 });
 
 export const shorts = mysqlTable("shorts", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   director: varchar("director", { length: 255 }).notNull(),
   description: text("description"),

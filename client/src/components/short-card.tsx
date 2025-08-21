@@ -38,7 +38,7 @@ export function ShortCard({ short, onRate }: ShortCardProps) {
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform"
         />
       )}
-      
+      {/* <p>{short.id}</p> */}
       <div className="p-6">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-xl font-semibold text-cinema-light">

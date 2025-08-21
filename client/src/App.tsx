@@ -1,6 +1,6 @@
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/header";
@@ -11,6 +11,7 @@ import NotFound from "@/pages/not-found";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { type Room as RoomType } from "@shared/schema";
+
 
 function AppContent() {
   const [location] = useLocation();
@@ -25,7 +26,7 @@ function AppContent() {
   });
 
   const currentView = location === "/" ? "home" : location === "/progress" ? "progress" : "room";
-
+const queryClient = new QueryClient();
   return (
     <div className="min-h-screen bg-cinema-dark text-cinema-light">
       <Header 

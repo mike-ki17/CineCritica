@@ -1,4 +1,5 @@
 import { type RoomWithStats } from "@shared/schema";
+import { CloudCog } from "lucide-react";
 
 interface RoomCardProps {
   room: RoomWithStats;
@@ -6,11 +7,15 @@ interface RoomCardProps {
 }
 
 export function RoomCard({ room, onSelect }: RoomCardProps) {
-  const completionColor = room.completionRate >= 75 
-    ? "status-rated" 
-    : room.completionRate >= 50 
-    ? "status-pending" 
-    : "cinema-muted";
+  // Calcular el color basado en el porcentaje de completitud
+  const getCompletionColor = (rate: number) => {
+    if (rate >= 75) return "status-rated";
+    if (rate >= 50) return "yellow-500";
+    if (rate >= 25) return "orange-500";
+    return "status-pending";
+  };
+
+  const completionColor = getCompletionColor(room.completionRate);
 
   return (
     <div
@@ -35,7 +40,7 @@ export function RoomCard({ room, onSelect }: RoomCardProps) {
       
       <div className="flex items-center justify-between">
         <span className="text-cinema-gold font-medium">
-          {room.shortsCount} cortos
+          {room.shortsCount} cortos 
         </span>
         
         <div className="flex items-center space-x-2">

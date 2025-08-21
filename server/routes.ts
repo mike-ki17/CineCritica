@@ -17,6 +17,7 @@ import { storage } from "./storage";
 import { insertRatingSchema } from "@shared/schema";
 import { z } from "zod";
 import ExcelJS from "exceljs";
+import { CloudCog } from "lucide-react";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all rooms with statistics
@@ -67,6 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         rating = await storage.createRating(validatedData);
       }
+      console.log("Rating saved:", rating);
       
       res.json(rating);
     } catch (error) {
@@ -84,6 +86,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(stats);
     } catch (error) {
       res.status(500).json({ message: "Error fetching statistics" });
+    }
+  });
+
+  // Get all ratings with details
+  app.get("/api/ratings/all", async (req, res) => {
+    try {
+      const ratings = await storage.getAllRatings();
+      // Map the ratings to include all required details
+      const ratingDetails = ratings.map(rating => ({
+        id: rating.shortId,
+        shortTitle: rating.shortTitle,
+        director: rating.director,
+        rating: parseFloat(rating.rating),
+        createdAt: rating.createdAt
+      }));
+
+      res.json(ratingDetails);
+    } catch (error) {
+      console.error('Error al obtener todas las calificaciones:', error);
+      res.status(500).json({ message: "Error al obtener las calificaciones" });
+    }
+  });
+
+  // Get rating details
+  app.get("/api/ratings/:shortId/details", async (req, res) => {
+    try {
+      const shortId = parseInt(req.params.shortId);
+      if (isNaN(shortId)) {
+        return res.status(400).json({ message: "ID del corto inválido" });
+      }
+
+      const rating = await storage.getRating(shortId);
+      if (!rating) {
+        return res.status(404).json({ message: "Calificación no encontrada" });
+      }
+
+      const short = await storage.getShort(shortId);
+      if (!short) {
+        return res.status(404).json({ message: "Corto no encontrado" });
+      }
+
+      // Retornar los datos solicitados
+      const ratingDetails = {
+        id: rating.id,
+        shortTitle: short.title,
+        director: short.director,
+        rating: parseFloat(rating.rating),
+        createdAt: rating.createdAt
+      };
+
+      res.json(ratingDetails);
+    } catch (error) {
+      console.error('Error al obtener detalles de calificación:', error);
+      res.status(500).json({ message: "Error al obtener los detalles de la calificación" });
     }
   });
 

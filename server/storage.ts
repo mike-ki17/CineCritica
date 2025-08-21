@@ -14,6 +14,7 @@ export interface IStorage {
   getRating(shortId: number): Promise<Rating | undefined>;
   createRating(rating: InsertRating): Promise<Rating>;
   updateRating(shortId: number, rating: number): Promise<Rating>;
+  updateRatingMetadata(ratingId: number, metadata: { shortTitle: string; director: string; updatedAt: Date }): Promise<Rating>;
   getAllRatings(): Promise<(Rating & { shortTitle: string; director: string })[]>;
   
   // Statistics
@@ -61,34 +62,35 @@ export class MemStorage implements IStorage {
     // Initialize shorts
     const shortsData = [
       // Room 1 - Drama
-      { title: "En sus manos", director: "Monica Del Valle Fuenmayor Rojas", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Torre de Aburrá", director: "Andres Felipe Tabares Tabares", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Donde todo termina", director: "Diego Armando Ocampo Cárdenas", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Una esquina más", director: "Sebastian Estrada Vélez", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Segundo Tiempo", director: "Katherine Usquiano", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "El Visitante", director: "Brenda Avila", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Tenemos que hablar", director: "Vanessa Rojas Lopera", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "La tienda de la Nana", director: "Eleazar Maldonado", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Notas para mi hija", director: "Alejandra Álvarez Sánchez", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Sueños de Alto Vuelo", director: "Beatriz Ferrer", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Lo que se cuida", director: "Michel Agudelo Rodas", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "PROMESAS DE AMOR", director: "CARLOS ANDRES LONDOÑO VALLEJO", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "La energía más pura", director: "Pedro Antonio Valencia Ortiz", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "DE RUSIA CON AMOR", director: "JORGE HUMBERTO Villegas", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Polvo de estrellas", director: "Juan Diego Rodriguez Machado", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Uno es todo, todo es uno", director: "Gloria Marcela Hoyos Gómez", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "El mapa de los recuerdos", director: "Zoe Durango", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Invisibles", director: "Gabriel Jaime Muñoz", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "El Cruce de la vida", director: "Kevin Castaño García", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "COSAS POR HACER", director: "Javier Hernando Angel Londoño", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "MANOS QUE TRANSFORMAN una vida en el reciclaje", director: "williams adrian nuñez madero", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "El trofeo de la vida.", director: "Leonardo Beltran", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "RESPIRA", director: "Alex D. Gomez Ayala", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Debajo del valle", director: "Juan Felipe Marín Bedoya", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Donde Nacen las Fuertes", director: "Cristian Idarraga Quintero", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Reciclando Recuerdos", director: "Angel Stiven Guerrero Bustamante", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Vida Liquida", director: "Juliana Pinilla Avila", description: "", duration: "", roomId: 1, imageUrl: "" },
-      { title: "Lo que cabe en una caja", director: "Sofia Lopera", description: "", duration: "", roomId: 1, imageUrl: "" },
+      { title: "En sus manos", director: "Monica Del Valle Fuenmayor Rojas", description: "", duration: "", roomId: 1, imageUrl: "", id: 22774 },
+{ title: "Torre de Aburrá", director: "Andres Felipe Tabares Tabares", description: "", duration: "", roomId: 1, imageUrl: "", id: 22665 },
+{ title: "Donde todo termina", director: "Diego Armando Ocampo Cárdenas", description: "", duration: "", roomId: 1, imageUrl: "", id: 22672 },
+{ title: "Una esquina más", director: "Sebastian Estrada Vélez", description: "", duration: "", roomId: 1, imageUrl: "", id: 22680 },
+{ title: "Segundo Tiempo", director: "Katherine Usquiano", description: "", duration: "", roomId: 1, imageUrl: "", id: 22697 },
+{ title: "El Visitante", director: "Brenda Avila", description: "", duration: "", roomId: 1, imageUrl: "", id: 22698 },
+{ title: "Tenemos que hablar", director: "Vanessa Rojas Lopera", description: "", duration: "", roomId: 1, imageUrl: "", id: 22700 },
+{ title: "La tienda de la Nana", director: "Eleazar Maldonado", description: "", duration: "", roomId: 1, imageUrl: "", id: 22708 },
+{ title: "Notas para mi hija", director: "Alejandra Álvarez Sánchez", description: "", duration: "", roomId: 1, imageUrl: "", id: 22712 },
+{ title: "Sueños de Alto Vuelo", director: "Beatriz Ferrer", description: "", duration: "", roomId: 1, imageUrl: "", id: 22715 },
+{ title: "Lo que se cuida", director: "Michel Agudelo Rodas", description: "", duration: "", roomId: 1, imageUrl: "", id: 22718 },
+{ title: "PROMESAS DE AMOR", director: "CARLOS ANDRES LONDOÑO VALLEJO", description: "", duration: "", roomId: 1, imageUrl: "", id: 22738 },
+{ title: "La energía más pura", director: "Pedro Antonio Valencia Ortiz", description: "", duration: "", roomId: 1, imageUrl: "", id: 22741 },
+{ title: "DE RUSIA CON AMOR", director: "JORGE HUMBERTO Villegas", description: "", duration: "", roomId: 1, imageUrl: "", id: 22744 },
+{ title: "Polvo de estrellas", director: "Juan Diego Rodriguez Machado", description: "", duration: "", roomId: 1, imageUrl: "", id: 22751 },
+{ title: "Uno es todo, todo es uno", director: "Gloria Marcela Hoyos Gómez", description: "", duration: "", roomId: 1, imageUrl: "", id: 22752 },
+{ title: "El mapa de los recuerdos", director: "Zoe Durango", description: "", duration: "", roomId: 1, imageUrl: "", id: 22761 },
+{ title: "Invisibles", director: "Gabriel Jaime Muñoz", description: "", duration: "", roomId: 1, imageUrl: "", id: 22762 },
+{ title: "El Cruce de la vida", director: "Kevin Castaño García", description: "", duration: "", roomId: 1, imageUrl: "", id: 22769 },
+{ title: "COSAS POR HACER", director: "Javier Hernando Angel Londoño", description: "", duration: "", roomId: 1, imageUrl: "", id: 22779 },
+{ title: "MANOS QUE TRANSFORMAN una vida en el reciclaje", director: "williams adrian nuñez madero", description: "", duration: "", roomId: 1, imageUrl: "", id: 22782 },
+{ title: "El trofeo de la vida.", director: "Leonardo Beltran", description: "", duration: "", roomId: 1, imageUrl: "", id: 22784 },
+{ title: "RESPIRA", director: "Alex D. Gomez Ayala", description: "", duration: "", roomId: 1, imageUrl: "", id: 22785 },
+{ title: "Debajo del valle", director: "Juan Felipe Marín Bedoya", description: "", duration: "", roomId: 1, imageUrl: "", id: 22787 },
+{ title: "Donde Nacen las Fuertes", director: "Cristian Idarraga Quintero", description: "", duration: "", roomId: 1, imageUrl: "", id: 22839 },
+{ title: "Reciclando Recuerdos", director: "Angel Stiven Guerrero Bustamante", description: "", duration: "", roomId: 1, imageUrl: "", id: 22862 },
+{ title: "Vida Liquida", director: "Juliana Pinilla Avila", description: "", duration: "", roomId: 1, imageUrl: "", id: 22863 },
+{ title: "Lo que cabe en una caja", director: "Sofia Lopera", description: "", duration: "", roomId: 1, imageUrl: "", id: 22870 },
+
       // Room 2 - Documentary
        { title: "INERCIA", director: "Sara Diaz Guzman", description: "", duration: "", roomId: 2, imageUrl: "" },
       { title: "Premicorto", director: "MariaFer ME", description: "", duration: "", roomId: 2, imageUrl: "" },
