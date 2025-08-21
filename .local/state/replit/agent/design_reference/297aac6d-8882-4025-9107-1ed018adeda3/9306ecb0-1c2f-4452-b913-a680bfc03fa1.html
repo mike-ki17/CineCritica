@@ -1,0 +1,598 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Evaluación de Cortos Cinematográficos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cinema-dark': '#0f0f0f',
+                        'cinema-charcoal': '#1a1a1a',
+                        'cinema-gold': '#d4af37',
+                        'cinema-copper': '#b87333',
+                        'cinema-light': '#f5f5f5',
+                        'cinema-muted': '#a0a0a0',
+                        'status-rated': '#10b981',
+                        'status-pending': '#f59e0b'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'playfair': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-cinema-dark text-cinema-light font-inter min-h-screen">
+    <!-- @COMPONENT: App [main application container] -->
+    <div id="app-container" class="min-h-screen">
+        
+        <!-- @COMPONENT: Header [global navigation header] -->
+        <header class="bg-cinema-charcoal border-b border-gray-800 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-film text-cinema-gold text-2xl"></i>
+                        <h1 class="text-xl font-playfair font-semibold text-cinema-light">CineEval Pro</h1>
+                    </div>
+                    
+                    <!-- Breadcrumb Navigation -->
+                    <nav class="hidden md:flex items-center space-x-2 text-sm" data-mock="true">
+                        <span class="text-cinema-muted">Evaluación</span>
+                        <i class="fas fa-chevron-right text-xs text-cinema-muted"></i>
+                        <span class="text-cinema-gold" data-bind="currentRoom.name">Salas</span>
+                    </nav>
+                    
+                    <div class="flex items-center space-x-4">
+                        <button class="bg-cinema-gold text-cinema-dark px-4 py-2 rounded-lg font-medium hover:bg-yellow-400 transition-colors" 
+                                data-event="click:exportToExcel" data-implementation="Export ratings to Excel file">
+                            <i class="fas fa-download mr-2"></i>Exportar Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- @END_COMPONENT: Header -->
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- @COMPONENT: HomePage [room selection view] -->
+            <div id="home-view" class="space-y-8">
+                <div class="text-center space-y-4">
+                    <h2 class="text-4xl font-playfair font-bold text-cinema-light">
+                        Selecciona una Sala de Evaluación
+                    </h2>
+                    <p class="text-lg text-cinema-muted max-w-2xl mx-auto">
+                        Elige entre nuestras 4 salas especializadas para evaluar los cortos cinematográficos. 
+                        Cada sala contiene una selección curada de producciones.
+                    </p>
+                </div>
+
+                <!-- @MAP: rooms.map(room => ( -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Room Card 1 -->
+                    <div class="bg-cinema-charcoal rounded-xl p-6 border border-gray-800 hover:border-cinema-gold hover:shadow-2xl hover:shadow-cinema-gold/20 transition-all duration-300 cursor-pointer group"
+                         data-event="click:selectRoom" data-room-id="1" data-implementation="Navigate to room 1 shorts list">
+                        <!-- A modern cinema auditorium with red velvet seats -->
+                        <img src="https://pixabay.com/get/g5ca3c8da23f9357094f4e35f1f794183adf3d5c55baefd3ec588083556704067bf5c19896669d47ba3c5154c400c9bf07e48173a2a28b69c457e25572820e4b9_1280.jpg" 
+                             alt="Sala de evaluación 1" class="w-full h-32 object-cover rounded-lg mb-4 group-hover:scale-105 transition-transform" data-mock-image="true">
+                        <h3 class="text-xl font-playfair font-semibold text-cinema-light mb-2" data-bind="room.name">sala 1</h3>
+                        <p class="text-cinema-muted text-sm mb-4" data-bind="room.description">Cortos de drama y ficción narrativa</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-cinema-gold font-medium" data-bind="room.shortsCount">12 cortos</span>
+                            <div class="flex items-center space-x-1">
+                                <span class="w-2 h-2 bg-status-rated rounded-full" data-bind="room.ratedCount"></span>
+                                <span class="text-xs text-cinema-muted" data-bind="room.completionRate">75% evaluados</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Card 2 -->
+                    <div class="bg-cinema-charcoal rounded-xl p-6 border border-gray-800 hover:border-cinema-gold hover:shadow-2xl hover:shadow-cinema-gold/20 transition-all duration-300 cursor-pointer group"
+                         data-event="click:selectRoom" data-room-id="2">
+                        <!-- A vintage movie theater with ornate decorations -->
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=200" 
+                             alt="Sala de evaluación 2" class="w-full h-32 object-cover rounded-lg mb-4 group-hover:scale-105 transition-transform" data-mock-image="true">
+                        <h3 class="text-xl font-playfair font-semibold text-cinema-light mb-2">sala 2</h3>
+                        <p class="text-cinema-muted text-sm mb-4">Documentales y no ficción</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-cinema-gold font-medium">8 cortos</span>
+                            <div class="flex items-center space-x-1">
+                                <span class="w-2 h-2 bg-status-pending rounded-full"></span>
+                                <span class="text-xs text-cinema-muted">25% evaluados</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Card 3 -->
+                    <div class="bg-cinema-charcoal rounded-xl p-6 border border-gray-800 hover:border-cinema-gold hover:shadow-2xl hover:shadow-cinema-gold/20 transition-all duration-300 cursor-pointer group"
+                         data-event="click:selectRoom" data-room-id="3">
+                        <!-- A futuristic movie theater with blue lighting -->
+                        <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=200" 
+                             alt="Sala de evaluación 3" class="w-full h-32 object-cover rounded-lg mb-4 group-hover:scale-105 transition-transform" data-mock-image="true">
+                        <h3 class="text-xl font-playfair font-semibold text-cinema-light mb-2">sala 3</h3>
+                        <p class="text-cinema-muted text-sm mb-4">Animación y experimental</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-cinema-gold font-medium">15 cortos</span>
+                            <div class="flex items-center space-x-1">
+                                <span class="w-2 h-2 bg-status-rated rounded-full"></span>
+                                <span class="text-xs text-cinema-muted">90% evaluados</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Card 4 -->
+                    <div class="bg-cinema-charcoal rounded-xl p-6 border border-gray-800 hover:border-cinema-gold hover:shadow-2xl hover:shadow-cinema-gold/20 transition-all duration-300 cursor-pointer group"
+                         data-event="click:selectRoom" data-room-id="4">
+                        <!-- A classic cinema with golden lighting and elegant interior -->
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=200" 
+                             alt="Sala de evaluación 4" class="w-full h-32 object-cover rounded-lg mb-4 group-hover:scale-105 transition-transform" data-mock-image="true">
+                        <h3 class="text-xl font-playfair font-semibold text-cinema-light mb-2">sala 4</h3>
+                        <p class="text-cinema-muted text-sm mb-4">Género fantástico y terror</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-cinema-gold font-medium">10 cortos</span>
+                            <div class="flex items-center space-x-1">
+                                <span class="w-2 h-2 bg-status-pending rounded-full"></span>
+                                <span class="text-xs text-cinema-muted">40% evaluados</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+
+                <!-- Statistics Section -->
+                <div class="bg-cinema-charcoal rounded-xl p-8 border border-gray-800">
+                    <h3 class="text-2xl font-playfair font-semibold text-cinema-light mb-6">Progreso General</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-cinema-gold mb-2" data-bind="stats.totalShorts">45</div>
+                            <div class="text-cinema-muted">Total de Cortos</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-status-rated mb-2" data-bind="stats.ratedShorts">28</div>
+                            <div class="text-cinema-muted">Evaluados</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-status-pending mb-2" data-bind="stats.pendingShorts">17</div>
+                            <div class="text-cinema-muted">Pendientes</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-cinema-copper mb-2" data-bind="stats.averageRating">7.8</div>
+                            <div class="text-cinema-muted">Promedio</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_COMPONENT: HomePage -->
+
+            <!-- @COMPONENT: RoomView [shorts list for selected room] -->
+            <div id="room-view" class="space-y-6 hidden">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button class="text-cinema-gold hover:text-yellow-400 transition-colors" 
+                                data-event="click:goBackToRooms" data-implementation="Navigate back to room selection">
+                            <i class="fas fa-arrow-left mr-2"></i>Volver a Salas
+                        </button>
+                        <h2 class="text-3xl font-playfair font-bold text-cinema-light" data-bind="selectedRoom.name">
+                            sala 1
+                        </h2>
+                    </div>
+                    
+                    <!-- Filter Controls -->
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <button class="px-3 py-1 rounded-full text-xs font-medium bg-cinema-gold text-cinema-dark" 
+                                    data-event="click:filterAll" data-implementation="Show all shorts">
+                                Todos
+                            </button>
+                            <button class="px-3 py-1 rounded-full text-xs font-medium border border-status-rated text-status-rated hover:bg-status-rated hover:text-white transition-colors" 
+                                    data-event="click:filterRated">
+                                Evaluados
+                            </button>
+                            <button class="px-3 py-1 rounded-full text-xs font-medium border border-status-pending text-status-pending hover:bg-status-pending hover:text-white transition-colors" 
+                                    data-event="click:filterPending">
+                                Pendientes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- @MAP: roomShorts.map(short => ( -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Short Card 1 - Rated -->
+                    <div class="bg-cinema-charcoal rounded-xl overflow-hidden border border-gray-800 hover:border-cinema-gold transition-colors group">
+                        <!-- A film crew shooting a dramatic scene with professional lighting -->
+                        <img src="https://pixabay.com/get/g7901ac6016843f6643c4c3c4360cf6454990360bb3e1b14f86c170f744156cd30fc7e3fe5d3912f2bcb210101a465add342623940361b826d2907625aaa1c722_1280.jpg" 
+                             alt="Corto cinematográfico 1" class="w-full h-48 object-cover group-hover:scale-105 transition-transform" data-mock-image="true">
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="text-xl font-semibold text-cinema-light" data-bind="short.title">El Último Suspiro</h3>
+                                <span class="bg-status-rated text-white text-xs px-2 py-1 rounded-full" data-bind="short.status">
+                                    <i class="fas fa-check mr-1"></i>Evaluado
+                                </span>
+                            </div>
+                            <p class="text-cinema-muted text-sm mb-4" data-bind="short.director">Director: María González</p>
+                            <p class="text-cinema-muted text-sm mb-4" data-bind="short.description">
+                                Un drama intimista sobre la relación entre una abuela y su nieto en sus últimos días juntos.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-cinema-muted text-sm">Duración:</span>
+                                    <span class="text-cinema-light text-sm" data-bind="short.duration">12 min</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-cinema-gold font-bold text-lg" data-bind="short.rating">8.5</span>
+                                    <div class="flex text-cinema-gold">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="w-full mt-4 bg-cinema-copper text-white py-2 rounded-lg hover:bg-orange-600 transition-colors" 
+                                    data-event="click:editRating" data-short-id="1" data-implementation="Open rating modal for editing">
+                                Editar Calificación
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Short Card 2 - Pending -->
+                    <div class="bg-cinema-charcoal rounded-xl overflow-hidden border border-gray-800 hover:border-cinema-gold transition-colors group">
+                        <!-- A black and white artistic film scene with dramatic shadows -->
+                        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=250" 
+                             alt="Corto cinematográfico 2" class="w-full h-48 object-cover group-hover:scale-105 transition-transform" data-mock-image="true">
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="text-xl font-semibold text-cinema-light">Sombras en Blanco</h3>
+                                <span class="bg-status-pending text-white text-xs px-2 py-1 rounded-full">
+                                    <i class="fas fa-clock mr-1"></i>Pendiente
+                                </span>
+                            </div>
+                            <p class="text-cinema-muted text-sm mb-4">Director: Carlos Mendoza</p>
+                            <p class="text-cinema-muted text-sm mb-4">
+                                Una exploración visual en blanco y negro sobre la memoria y el tiempo perdido.
+                            </p>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-cinema-muted text-sm">Duración:</span>
+                                    <span class="text-cinema-light text-sm">8 min</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-cinema-muted text-sm">Sin calificar</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-cinema-gold text-cinema-dark py-2 rounded-lg hover:bg-yellow-400 transition-colors font-medium" 
+                                    data-event="click:rateShort" data-short-id="2" data-implementation="Open rating modal for new rating">
+                                Calificar Ahora
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Short Card 3 - Pending -->
+                    <div class="bg-cinema-charcoal rounded-xl overflow-hidden border border-gray-800 hover:border-cinema-gold transition-colors group">
+                        <!-- A colorful animated scene with whimsical characters -->
+                        <img src="https://images.unsplash.com/photo-1595769816263-9b910be24d5f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=250" 
+                             alt="Corto cinematográfico 3" class="w-full h-48 object-cover group-hover:scale-105 transition-transform" data-mock-image="true">
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="text-xl font-semibold text-cinema-light">Universo Pequeño</h3>
+                                <span class="bg-status-pending text-white text-xs px-2 py-1 rounded-full">
+                                    <i class="fas fa-clock mr-1"></i>Pendiente
+                                </span>
+                            </div>
+                            <p class="text-cinema-muted text-sm mb-4">Director: Ana Ruiz</p>
+                            <p class="text-cinema-muted text-sm mb-4">
+                                Una aventura animada que explora la amistad desde la perspectiva de insectos.
+                            </p>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-cinema-muted text-sm">Duración:</span>
+                                    <span class="text-cinema-light text-sm">15 min</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-cinema-muted text-sm">Sin calificar</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-cinema-gold text-cinema-dark py-2 rounded-lg hover:bg-yellow-400 transition-colors font-medium" 
+                                    data-event="click:rateShort" data-short-id="3">
+                                Calificar Ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+            <!-- @END_COMPONENT: RoomView -->
+
+        </main>
+
+        <!-- @COMPONENT: RatingModal [rating form overlay] -->
+        <div id="rating-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+            <div class="bg-cinema-charcoal rounded-xl p-8 max-w-md w-full mx-4 border border-gray-800">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-playfair font-semibold text-cinema-light" data-bind="ratingModal.title">
+                        Calificar Corto
+                    </h3>
+                    <button class="text-cinema-muted hover:text-cinema-light transition-colors" 
+                            data-event="click:closeModal" data-implementation="Close rating modal">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-cinema-light mb-2" data-bind="selectedShort.title">
+                            El Último Suspiro
+                        </h4>
+                        <p class="text-cinema-muted text-sm" data-bind="selectedShort.director">
+                            Director: María González
+                        </p>
+                    </div>
+
+                    <!-- @STATE: rating:number = 5.0 -->
+                    <div class="space-y-4">
+                        <label class="block text-cinema-light font-medium">
+                            Calificación (1.0 - 10.0)
+                        </label>
+                        
+                        <!-- Rating Display -->
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-cinema-gold mb-2" data-bind="currentRating">7.5</div>
+                            <div class="flex justify-center space-x-1 mb-4">
+                                <!-- Stars representation -->
+                                <i class="fas fa-star text-cinema-gold text-lg"></i>
+                                <i class="fas fa-star text-cinema-gold text-lg"></i>
+                                <i class="fas fa-star text-cinema-gold text-lg"></i>
+                                <i class="fas fa-star text-cinema-gold text-lg"></i>
+                                <i class="fas fa-star text-cinema-gold text-lg"></i>
+                                <i class="fas fa-star text-cinema-gold text-lg"></i>
+                                <i class="fas fa-star text-cinema-gold text-lg"></i>
+                                <i class="fas fa-star-half-alt text-cinema-gold text-lg"></i>
+                                <i class="far fa-star text-cinema-muted text-lg"></i>
+                                <i class="far fa-star text-cinema-muted text-lg"></i>
+                            </div>
+                        </div>
+
+                        <!-- Rating Slider -->
+                        <div class="space-y-2">
+                            <input type="range" 
+                                   min="1" 
+                                   max="10" 
+                                   step="0.5" 
+                                   value="7.5"
+                                   class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                                   data-event="input:updateRating" 
+                                   data-implementation="Update rating value and stars display"
+                                   data-bind="ratingSlider">
+                            <div class="flex justify-between text-xs text-cinema-muted">
+                                <span>1.0</span>
+                                <span>5.0</span>
+                                <span>10.0</span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Rating Buttons -->
+                        <div class="grid grid-cols-5 gap-2">
+                            <button class="py-2 px-3 text-sm rounded-lg border border-gray-600 text-cinema-muted hover:border-cinema-gold hover:text-cinema-gold transition-colors" 
+                                    data-event="click:quickRating" data-rating="2" data-implementation="Set rating to 2.0">
+                                2.0
+                            </button>
+                            <button class="py-2 px-3 text-sm rounded-lg border border-gray-600 text-cinema-muted hover:border-cinema-gold hover:text-cinema-gold transition-colors" 
+                                    data-event="click:quickRating" data-rating="4">
+                                4.0
+                            </button>
+                            <button class="py-2 px-3 text-sm rounded-lg border border-gray-600 text-cinema-muted hover:border-cinema-gold hover:text-cinema-gold transition-colors" 
+                                    data-event="click:quickRating" data-rating="6">
+                                6.0
+                            </button>
+                            <button class="py-2 px-3 text-sm rounded-lg border border-gray-600 text-cinema-muted hover:border-cinema-gold hover:text-cinema-gold transition-colors" 
+                                    data-event="click:quickRating" data-rating="8">
+                                8.0
+                            </button>
+                            <button class="py-2 px-3 text-sm rounded-lg border border-gray-600 text-cinema-muted hover:border-cinema-gold hover:text-cinema-gold transition-colors" 
+                                    data-event="click:quickRating" data-rating="10">
+                                10.0
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-4">
+                        <button class="flex-1 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition-colors" 
+                                data-event="click:cancelRating" data-implementation="Close modal without saving">
+                            Cancelar
+                        </button>
+                        <button class="flex-1 bg-cinema-gold text-cinema-dark py-3 rounded-lg hover:bg-yellow-400 transition-colors font-medium" 
+                                data-event="click:saveRating" data-implementation="Save rating to database and update UI">
+                            Guardar Calificación
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: RatingModal -->
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 hidden">
+            <div class="bg-cinema-charcoal rounded-xl p-8 flex flex-col items-center space-y-4">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cinema-gold"></div>
+                <p class="text-cinema-light">Cargando...</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- @END_COMPONENT: App -->
+
+    <script>
+        // TODO: Implement React components and state management
+        // TODO: Connect to backend API endpoints
+        // TODO: Implement MySQL database integration
+        // TODO: Add Excel export functionality
+        
+        (function() {
+            // Mock state for demonstration
+            let currentView = 'home'; // 'home', 'room', 'rating'
+            let selectedRoom = null;
+            let selectedShort = null;
+            let currentRating = 7.5;
+
+            // Mock data - In real implementation, this comes from MySQL via API
+            const mockRooms = [
+                { id: 1, name: 'sala 1', description: 'Cortos de drama y ficción narrativa', shortsCount: 12, completionRate: 75 },
+                { id: 2, name: 'sala 2', description: 'Documentales y no ficción', shortsCount: 8, completionRate: 25 },
+                { id: 3, name: 'sala 3', description: 'Animación y experimental', shortsCount: 15, completionRate: 90 },
+                { id: 4, name: 'sala 4', description: 'Género fantástico y terror', shortsCount: 10, completionRate: 40 }
+            ];
+
+            const mockShorts = {
+                1: [
+                    { id: 1, title: 'El Último Suspiro', director: 'María González', duration: '12 min', rating: 8.5, status: 'rated' },
+                    { id: 2, title: 'Sombras en Blanco', director: 'Carlos Mendoza', duration: '8 min', rating: null, status: 'pending' },
+                    { id: 3, title: 'Universo Pequeño', director: 'Ana Ruiz', duration: '15 min', rating: null, status: 'pending' }
+                ]
+            };
+
+            // Navigation functions
+            function showView(viewName) {
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('room-view').classList.add('hidden');
+                
+                if (viewName === 'home') {
+                    document.getElementById('home-view').classList.remove('hidden');
+                } else if (viewName === 'room') {
+                    document.getElementById('room-view').classList.remove('hidden');
+                }
+                
+                currentView = viewName;
+            }
+
+            function showModal(modalId) {
+                document.getElementById(modalId).classList.remove('hidden');
+            }
+
+            function hideModal(modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+
+            // Event listeners for demonstration
+            document.addEventListener('click', function(e) {
+                // Room selection
+                if (e.target.closest('[data-event="click:selectRoom"]')) {
+                    const roomId = e.target.closest('[data-event="click:selectRoom"]').dataset.roomId;
+                    selectedRoom = mockRooms.find(room => room.id == roomId);
+                    showView('room');
+                }
+
+                // Back to rooms
+                if (e.target.closest('[data-event="click:goBackToRooms"]')) {
+                    showView('home');
+                }
+
+                // Rate short
+                if (e.target.closest('[data-event="click:rateShort"]')) {
+                    const shortId = e.target.closest('[data-event="click:rateShort"]').dataset.shortId;
+                    showModal('rating-modal');
+                }
+
+                // Edit rating
+                if (e.target.closest('[data-event="click:editRating"]')) {
+                    const shortId = e.target.closest('[data-event="click:editRating"]').dataset.shortId;
+                    showModal('rating-modal');
+                }
+
+                // Close modal
+                if (e.target.closest('[data-event="click:closeModal"]') || e.target.closest('[data-event="click:cancelRating"]')) {
+                    hideModal('rating-modal');
+                }
+
+                // Save rating
+                if (e.target.closest('[data-event="click:saveRating"]')) {
+                    // TODO: Save to database via API
+                    hideModal('rating-modal');
+                    showView('room'); // Refresh room view
+                }
+
+                // Quick rating buttons
+                if (e.target.closest('[data-event="click:quickRating"]')) {
+                    const rating = parseFloat(e.target.closest('[data-event="click:quickRating"]').dataset.rating);
+                    updateRatingDisplay(rating);
+                }
+
+                // Export to Excel
+                if (e.target.closest('[data-event="click:exportToExcel"]')) {
+                    // TODO: Call backend API to generate Excel file
+                    alert('Funcionalidad de exportación en desarrollo');
+                }
+            });
+
+            // Rating slider
+            document.addEventListener('input', function(e) {
+                if (e.target.dataset.event === 'input:updateRating') {
+                    const rating = parseFloat(e.target.value);
+                    updateRatingDisplay(rating);
+                }
+            });
+
+            function updateRatingDisplay(rating) {
+                currentRating = rating;
+                // Update rating display
+                const ratingDisplay = document.querySelector('[data-bind="currentRating"]');
+                if (ratingDisplay) {
+                    ratingDisplay.textContent = rating.toFixed(1);
+                }
+                
+                // Update slider
+                const slider = document.querySelector('[data-bind="ratingSlider"]');
+                if (slider) {
+                    slider.value = rating;
+                }
+                
+                // TODO: Update star display based on rating
+            }
+
+            // Initialize the application
+            showView('home');
+        })();
+    </script>
+
+    <style>
+        /* Custom slider styling */
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #d4af37;
+            cursor: pointer;
+            border: 2px solid #0f0f0f;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #d4af37;
+            cursor: pointer;
+            border: 2px solid #0f0f0f;
+        }
+
+        /* Loading animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</body>
+</html>

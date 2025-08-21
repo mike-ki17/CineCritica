@@ -39,10 +39,11 @@ export function Header({ currentView, currentRoom }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
-            <Film className="text-cinema-gold text-2xl h-8 w-8" />
+            {/* <Film className="text-cinema-gold text-2xl h-8 w-8" />
             <h1 className="text-xl font-playfair font-semibold text-cinema-light">
               CineEval Pro
-            </h1>
+            </h1> */}
+            <img src="https://cineconcelular.com/sf/wp-content/uploads/2025/06/lOGO-SMARTFILMS-MEDELLIN-300x78.png" alt="" className="w-32" />
           </div>
 
           {/* Navigation Menu */}

@@ -1,3 +1,16 @@
+  // Quitar calificación de un corto
+  // app.delete("/api/ratings/:shortId", async (req, res) => {
+  //   try {
+  //     const shortId = parseInt(req.params.shortId);
+  //     if (isNaN(shortId)) {
+  //       return res.status(400).json({ message: "Invalid short ID" });
+  //     }
+  //     await storage.removeRating(shortId);
+  //     res.json({ success: true });
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Error removing rating" });
+  //   }
+  // });
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
